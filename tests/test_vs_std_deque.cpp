@@ -1,3 +1,4 @@
+//随机对拍（property-based / differential testing），系统验证正确性
 #include <cassert>
 #include <cstddef>
 #include <deque>

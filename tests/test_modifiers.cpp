@@ -1,3 +1,4 @@
+//验证“修改类接口”（assign/insert/erase/resize/swap）
 #include <cassert>
 #include <vector>
 

@@ -1,3 +1,4 @@
+//验证迭代器体系（随机访问迭代器、反向迭代器）
 #include <cassert>
 #include <numeric>
 #include <vector>

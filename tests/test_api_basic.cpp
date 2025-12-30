@@ -1,3 +1,4 @@
+//验证 deque 的基本 API 功能是否正常工作
 #include <cassert>
 
 #include "deque/deque.hpp"

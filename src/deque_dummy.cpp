@@ -1,4 +1,3 @@
 #include "deque/deque.hpp"
 
-// This translation unit exists to produce a linkable library target.
-// The implementation is header-only; no code is required here.
+//满足构建系统的 “翻译单元存在性” 要求，让库目标的构建能够顺利完成。
