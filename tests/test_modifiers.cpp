@@ -13,19 +13,19 @@ void runModifierTests() {
     assert(d[i] == 7);
   }
 
-  // insert in middle
+  //插入
   auto it = d.begin();
   it += 2;
   d.insert(it, 42);
   assert(d.size() == 6);
   assert(d[2] == 42);
 
-  // erase single
+  //除去单个元素
   d.erase(d.begin() + 2);
   assert(d.size() == 5);
   assert(d[2] == 7);
 
-  // erase range
+  //除去一个范围的元素
   d.insert(d.begin(), 1);
   d.insert(d.begin(), 2);
   // now: 2,1,7,7,7,7,7
@@ -34,7 +34,7 @@ void runModifierTests() {
   assert(d.size() == 5);
   assert(d.front() == 2);
 
-  // resize
+  //重新调整大小
   d.resize(10, 9);
   assert(d.size() == 10);
   for (std::size_t i = 5; i < 10; ++i) {
@@ -44,7 +44,7 @@ void runModifierTests() {
   d.resize(3);
   assert(d.size() == 3);
 
-  // swap
+  // 交换内容
   deque::Deque<int> other;
   other.pushBack(100);
   other.pushBack(200);

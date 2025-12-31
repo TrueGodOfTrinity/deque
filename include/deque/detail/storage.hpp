@@ -35,7 +35,7 @@ class SegmentedStorage {
   SegmentedStorage() {
     initEmpty_();
   }
-
+// 作用：拷贝构造函数，创建一个新的 SegmentedStorage 对象作为 other 的副本。
   SegmentedStorage(const SegmentedStorage& other) : allocator_(allocator_traits::select_on_container_copy_construction(other.allocator_)) {
     initEmpty_();
     try {
@@ -49,7 +49,7 @@ class SegmentedStorage {
       throw;
     }
   }
-
+//作用：移动构造函数，将 other 的资源转移到新创建的 SegmentedStorage 对象中。
   SegmentedStorage(SegmentedStorage&& other) noexcept
       : map_(other.map_),
         map_capacity_(other.map_capacity_),
@@ -67,7 +67,7 @@ class SegmentedStorage {
     other.finish_offset_ = 0;
     other.size_ = 0;
   }
-
+// 作用：赋值运算符，使用 copy-and-swap 技巧实现异常安全的赋值操作。
   SegmentedStorage& operator=(SegmentedStorage other) noexcept(std::is_nothrow_move_constructible_v<allocator_type>) {
     swap(other);
     return *this;
@@ -78,7 +78,7 @@ class SegmentedStorage {
     freeAllBlocks_();
     freeMap_();
   }
-
+// 作用：交换两个 SegmentedStorage 对象的内容。
   void swap(SegmentedStorage& other) noexcept {
     using std::swap;
     swap(map_, other.map_);
@@ -105,28 +105,28 @@ class SegmentedStorage {
     auto [block_index, offset] = locate_(index);
     return map_[block_index][offset];
   }
-
+// 作用：根据给定的索引返回对存储在分段存储中的元素的引用。
   const T& atIndex(size_type index) const {
     assert(index < size_);
     auto [block_index, offset] = locate_(index);
     return map_[block_index][offset];
   }
-
+// 作用：返回存储在分段存储中的第一个元素的引用。
   T& front() {
     assert(size_ > 0);
     return atIndex(0);
   }
-
+// 作用：返回存储在分段存储中的第一个元素的常量引用。
   const T& front() const {
     assert(size_ > 0);
     return atIndex(0);
   }
-
+// 作用：返回存储在分段存储中的最后一个元素的引用。
   T& back() {
     assert(size_ > 0);
     return atIndex(size_ - 1);
   }
-
+// 作用：返回存储在分段存储中的最后一个元素的常量引用。
   const T& back() const {
     assert(size_ > 0);
     return atIndex(size_ - 1);
@@ -163,7 +163,7 @@ class SegmentedStorage {
     }
   }
 
-  // Insert value at index (0..size). Returns the index of inserted element.
+  //作用：在指定索引处插入一个新元素，返回新元素的索引。
   size_type insertAt(size_type index, const T& value) {
     assert(index <= size_);
     if (index == size_) {
@@ -175,7 +175,7 @@ class SegmentedStorage {
       return 0;
     }
 
-    // Create an extra slot at end by duplicating last element, then shift.
+    //作用：在指定索引处插入一个新元素，返回新元素的索引。
     pushBack(back());
     for (size_type i = size_ - 1; i > index; --i) {
       atIndex(i) = std::move(atIndex(i - 1));
@@ -184,7 +184,7 @@ class SegmentedStorage {
     return index;
   }
 
-  // Erase element at index (0..size-1). Returns index of next element (same index).
+  //作用：在指定索引处删除一个元素，返回被删除元素的索引。
   size_type eraseAt(size_type index) {
     assert(index < size_);
     for (size_type i = index; i + 1 < size_; ++i) {
@@ -194,7 +194,7 @@ class SegmentedStorage {
     return index;
   }
 
-  // Erase [first, last). Returns index of first.
+  // 作用：删除指定范围内的元素，返回下一个元素的索引。
   size_type eraseRange(size_type first, size_type last) {
     assert(first <= last);
     assert(last <= size_);
@@ -210,7 +210,7 @@ class SegmentedStorage {
     }
     return first;
   }
-
+//作用：调整分段存储的大小。
   void resize(size_type count) {
     if (count < size_) {
       while (size_ > count) {
@@ -241,7 +241,7 @@ class SegmentedStorage {
       pushBack(value);
     }
   }
-
+// 作用：将指定范围内的元素赋值给分段存储。
   template <class InputIt, class = std::enable_if_t<!std::is_integral_v<InputIt>>>
   void assign(InputIt first, InputIt last) {
     clear();
@@ -268,7 +268,7 @@ class SegmentedStorage {
   size_type size_ = 0;
 
   allocator_type allocator_{};
-
+// 作用：初始化一个空的分段存储结构，设置初始的块和偏移量。
   void initEmpty_() {
     map_capacity_ = 8;
     map_ = map_allocator_traits::allocate(map_allocator_, map_capacity_);
@@ -285,7 +285,7 @@ class SegmentedStorage {
     finish_offset_ = start_offset_;
     size_ = 0;
   }
-
+// 作用：重置分段存储到中心位置，释放所有块和映射。
   void resetToCenter_() {
     // Destroyed already, so only deallocate blocks and reinit
     freeAllBlocks_();
@@ -324,14 +324,14 @@ class SegmentedStorage {
     map_ = nullptr;
     map_capacity_ = 0;
   }
-
+// 作用：如果指定的块索引处没有分配块，则分配一个新块。
   void allocateBlockIfNeeded_(size_type block_index) {
     assert(block_index < map_capacity_);
     if (map_[block_index] == nullptr) {
       map_[block_index] = allocateBlock(allocator_, block_size);
     }
   }
-
+// 作用：根据需要扩展映射数组，以便在前端或后端插入新块。
   void growMapIfNeeded_(bool grow_front) {
     if (!grow_front) {
       if (finish_block_ + 1 < map_capacity_) {
@@ -349,7 +349,7 @@ class SegmentedStorage {
       new_map[i] = nullptr;
     }
 
-    // Re-center existing pointers.
+    // 作用
     size_type used_begin = start_block_;
     size_type used_end = finish_block_;
     size_type used_count = (used_end - used_begin) + 1;
@@ -367,7 +367,7 @@ class SegmentedStorage {
     map_ = new_map;
     map_capacity_ = new_capacity;
   }
-
+// 作用：根据给定的索引定位元素在分段存储中的块索引和偏移量。
   Location locate_(size_type index) const {
     size_type absolute = start_offset_ + index;
     size_type block_shift = absolute / block_size;
@@ -375,11 +375,11 @@ class SegmentedStorage {
     size_type block_index = start_block_ + block_shift;
     return {block_index, offset};
   }
-
+// 作用：返回指向指定块索引和偏移量的元素的指针。
   T* elementPtr_(size_type block_index, size_type offset) const {
     return map_[block_index] + offset;
   }
-
+// 作用：将起始位置向前移动一个元素。
   void incrementStart_() {
     ++start_offset_;
     if (start_offset_ == block_size) {
@@ -389,7 +389,7 @@ class SegmentedStorage {
       allocateBlockIfNeeded_(start_block_);
     }
   }
-
+// 作用：将结束位置向后移动一个元素。
   void decrementFinish_() {
     if (finish_offset_ == 0) {
       assert(finish_block_ > 0);
@@ -398,7 +398,7 @@ class SegmentedStorage {
     }
     --finish_offset_;
   }
-
+// 作用：在分段存储的末尾插入一个新元素。
   template <class U>
   void emplaceBack_(U&& value) {
     growMapIfNeeded_(false);
@@ -415,7 +415,7 @@ class SegmentedStorage {
     ++finish_offset_;
     ++size_;
   }
-
+// 作用：在分段存储的前端插入一个新元素。
   template <class U>
   void emplaceFront_(U&& value) {
     growMapIfNeeded_(true);

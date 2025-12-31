@@ -5,7 +5,7 @@
 
 void runApiBasicTests() {
   deque::Deque<int> d;
-
+//assert 用于在调试阶段验证条件是否为真，如果条件为假则终止程序运行。
   assert(d.empty());
   assert(d.size() == 0);
 

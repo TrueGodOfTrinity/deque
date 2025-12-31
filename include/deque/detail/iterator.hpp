@@ -20,11 +20,11 @@ class DequeIterator {
   using iterator_category = std::random_access_iterator_tag;
 
   DequeIterator() = default;
-
+  //explicit:防止构造函数内容隐式转换
   explicit DequeIterator(std::conditional_t<is_const, const storage_type*, storage_type*> storage, std::size_t index)
       : storage_(storage), index_(index) {}
 
-  // Allow iterator -> const_iterator conversion
+  //让非const 迭代器能够隐式转换为 const 迭代器
   template <bool other_const, class = std::enable_if_t<is_const && !other_const>>
   DequeIterator(const DequeIterator<storage_type, other_const>& other)
       : storage_(other.storage_), index_(other.index_) {}

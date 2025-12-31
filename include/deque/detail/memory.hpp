@@ -1,12 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <new>
-#include <type_traits>
-#include <utility>
+#include <memory>   //std::allocator_traits
+#include <new>      //placement new
+#include <type_traits>   //std::is_nothrow_destructible
+#include <utility>     //std::forward
 
 namespace deque::detail {
 
+//分配、构造、销毁、释放内存的辅助函数
 template <class Allocator, class T, class... Args>
 inline void constructAt(Allocator& allocator, T* ptr, Args&&... args) {
   std::allocator_traits<Allocator>::construct(allocator, ptr, std::forward<Args>(args)...);

@@ -11,7 +11,7 @@ void runIteratorTests() {
     d.pushBack(i);
   }
 
-  // forward iteration
+  //前向迭代
   long long sum_1 = 0;
   for (auto it = d.begin(); it != d.end(); ++it) {
     sum_1 += *it;
@@ -23,14 +23,14 @@ void runIteratorTests() {
   }
   assert(sum_1 == sum_2);
 
-  // random access iterator ops
+  //随机访问
   auto it = d.begin();
   it += 10;
   assert(*it == 10);
   assert(it[5] == 15);
   assert((d.end() - d.begin()) == static_cast<std::ptrdiff_t>(d.size()));
 
-  // reverse iteration
+  // 反向迭代
   int last = 999;
   for (auto rit = d.rBegin(); rit != d.rEnd(); ++rit) {
     assert(*rit == last);
@@ -38,7 +38,7 @@ void runIteratorTests() {
   }
   assert(last == -1);
 
-  // const iterator conversion
+  // 常量迭代器
   deque::Deque<int>::const_iterator cit = d.begin();
   assert(*cit == 0);
 }
